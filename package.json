@@ -6,11 +6,13 @@
   "dependencies": {
     "mathjs": "^6.2.5",
     "numbers": "^0.7.0",
-    "numeric": "^1.2.6"
+    "numeric": "^1.2.6",
+    "rref": "0.0.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node app.js"
+    "test": "node app2.js",
+    "start": "node app.js"
   },
   "author": "Cameron Davis",
   "license": "ISC"
