@@ -18,30 +18,50 @@ let time_in_weeks = process.argv[2];
 const initial_state_vector = [6.4089*Math.pow(10,12), 6.4089*Math.pow(10,12), 6.4089*Math.pow(10,12),
 2.9371*Math.pow(10,9), 0, 8.184*Math.pow(10,3), 8.184*Math.pow(10,3)];
 
-const transition_matrix = [ [.6509,0,0,0,0,0,0], [0,.225,0,0,0,0,0], [0,0,.29922,0,0,0,0],
-    [.3491,.775,.30078,.23,0,0,0], [0,0,0,.6377,1,0,0], [0,0,0,.1323,0,1,0], [0,0,.4,0,0,0,1] ];
+const transition_matrix = [
+[0.6509,0,0,0,1/6,0,0],
+[0,0.225,0,0,1/6,0,0],
+[0,0,0.29922,0,1/6,0,0],
+[0.3491,0.775,0.30078,0.23,0,0,0],
+[0,0,0,0.6377,0.5,0.4,0.4],
+[0,0,0,0.1323,0,0.6,0],
+[0,0,0.4,0,0,0,0.6]
+];
+
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+function filterMatrix(matrix_in)
+{
+  for(var row = 0; row < matrix_in.length; row++)
+  {
+    filterRow(matrix_in[row])
+  }
+}
+
+function filterRow(row_in)
+{
+  for(var column = 0; column < row_in.length; column++)
+  {
+    row_in[column] = Math.round(row_in[column] * 10000) / 10000;
+  }
+}
 
 if(math.eig){
   //Save Eigen Values into matrix called eigen_values
   var eigen_values = math.eig(transition_matrix).lambda.x;
+  var eigen_matrix = math.eig(transition_matrix).E.x;
 
-  //Filter Out Really Low Eigen Values that should be zero
-
-  for(var i = 0; i < 7; i++)
+  filterRow(eigen_values);
+  filterMatrix(eigen_matrix);
+  console.log(`Eigen Values  = ${eigen_values}`);
+  for(let i = 0; i < eigen_matrix.length; i++)
   {
-    eigen_values[i] = Math.round(eigen_values[i] * 100000) / 100000;
+    console.log(`Eigen Vector For ${eigen_values[i]} = [${eigen_matrix[i]}]`);
   }
 }
 
-var eigen_matrix = [
-[-1403.0/441.0, 0, 0, -3491.0/1323.0, 911.0/189.0, 1, 0], //0.6509
-[0,0,0,0,0,0,1], //1
-[0, 0, 0, -1100.0/189.0, 911.0/189.0, 1, 0], //0.23
-[0, 0, -35039.0/20000.0, -526951521.0/69220000, 95903703.0/13844000.0, 19896597.0/13844000, 1], //0.29922
-[0, 50.0/1323.0, 0, -7750.0/1323.0, 911.0/189.0, 1, 0], //0.255
-[0,0,0,0,0,1,0], //1
-[0,0,0,0,1,0,0,] //1
-];
 
 var coordinate_matrix = [eigen_matrix[0], eigen_matrix[1], eigen_matrix[2], eigen_matrix[3], eigen_matrix[4], eigen_matrix[5], eigen_matrix[6], initial_state_vector];
 
