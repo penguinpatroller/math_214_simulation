@@ -53,7 +53,7 @@ const transition_matrix_without_pumpkin_seed = [
 [0,.225,0,0,1/6,0],
 [0,0,.29922,0,1/6,0],
 [.3491,.775,.30078,.44,0,0],
-[0,0,0,0.56,0.5,0.4],
+[0,0,0,0.6,0.5,0.4],
 [0,0,.4,0,0,0,0.6]
 ];
 
@@ -74,7 +74,7 @@ function calculate_all_populations(matrix, weeks, vec)
   //Multipy vector by transition matrix
   const output_vector = math.multiply(matrix, vec);
 
-  reg_vals.push([reg_index, output_vector[3]]);
+  reg_vals.push([reg_index, output_vector[6]]);
   reg_index++;
 
   return calculate_all_populations(matrix, weeks - 1, output_vector);
@@ -86,50 +86,38 @@ function comparePopulation(population)
   return Math.round((population/initial_state_vector_with_pumpkinseed[0]) * 10000)/10000;
 }
 
-function exportToCsv(filename, rows) {
-    var processRow = function (row) {
-        var finalVal = '';
-        for (var j = 0; j < row.length; j++) {
-            var innerValue = row[j] === null ? '' : row[j].toString();
-            if (row[j] instanceof Date) {
-                innerValue = row[j].toLocaleString();
-            };
-            var result = innerValue.replace(/"/g, '""');
-            if (result.search(/("|,|\n)/g) >= 0)
-                result = '"' + result + '"';
-            if (j > 0)
-                finalVal += ',';
-            finalVal += result;
-        }
-        return finalVal + '\n';
-    };
-
-    var csvFile = '';
-    for (var i = 0; i < rows.length; i++) {
-        csvFile += processRow(rows[i]);
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
     }
-
-    var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
-    if (navigator.msSaveBlob) { // IE 10+
-        navigator.msSaveBlob(blob, filename);
-    } else {
-        var link = document.createElement("a");
-        if (link.download !== undefined) { // feature detection
-            // Browsers that support HTML5 download attribute
-            var url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", filename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    }
+  }
 }
 
-exportToCsv('out.csv', reg_vals);
 
+
+/*
 var population_array = calculate_all_populations(transition_matrix_with_pumpkin_seed, process.argv[2], initial_state_vector_with_pumpkinseed);
+for (let i=0;i<100;i++){
+  fs.appendFile('herr.txt' , i,function (err) {
+    if (err) throw err;
+  });
+  sleep(100);
+  fs.appendFile('herr.txt' , ',',function (err) {
+    if (err) throw err;
+  });
+  sleep(100);
+  fs.appendFile('herr.txt' , reg_vals[i][1],function (err) {
+    if (err) throw err;
+  });
+  sleep(100);
+  fs.appendFile('herr.txt' , '\n',function (err) {
+    if (err) throw err;
+  });
+  sleep(100);
+}*/
+
 var sum = 0;
 population_array.forEach( (item) =>
   sum+=item

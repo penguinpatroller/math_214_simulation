@@ -28,6 +28,13 @@ function filterMatrix(matrix_in)
   }
 }
 
-const matrix = [[3,9], [-4,3]];
+const matrix = [
+  [.6509,0,0,0,1/6,0],
+  [0,.225,0,0,1/6,0],
+  [0,0,.29922,0,1/6,0],
+  [.3491,.775,.30078,.44,0,0],
+  [0,0,0,0.6,0.5,0.4],
+  [0,0,.4,0,0,0,0.6]
+  ];
 
-console.log(math.eig(matrix).E);
+console.log(math.eig(matrix).lambda);
