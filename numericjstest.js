@@ -29,12 +29,18 @@ function filterMatrix(matrix_in)
 }
 
 const matrix = [
-  [.6509,0,0,0,1/6,0],
-  [0,.225,0,0,1/6,0],
-  [0,0,.29922,0,1/6,0],
-  [.3491,.775,.30078,.44,0,0],
-  [0,0,0,0.6,0.5,0.4],
-  [0,0,.4,0,0,0,0.6]
+  [0.6509,0,0,0,1/6,0,0],
+  [0,0.225,0,0,1/6,0,0],
+  [0,0,0.29922,0,1/6,0,0],
+  [0.3491,0.775,0.30078,0.23,0,0,0],
+  [0,0,0,0.6377,0.5,0.4,0.4],
+  [0,0,0,0.1323,0,0.6,0],
+  [0,0,0.4,0,0,0,0.6]
   ];
 
-console.log(math.eig(matrix).lambda);
+const temp_mat_real = math.eig(matrix).E.x;
+const temp_mat_imag = math.eig(matrix).E.y;
+filterMatrix(temp_mat_imag);
+filterMatrix(temp_mat_real);
+console.log(temp_mat_real);
+console.log(temp_mat_imag);
