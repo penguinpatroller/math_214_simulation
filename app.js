@@ -8,6 +8,7 @@ const ObjectsToCsv = require('objects-to-csv');
 
 //To track time
 const { PerformanceObserver, performance } = require('perf_hooks');
+var t0 = performance.now();
 
 //For linear regression
 const regression = require('regression');
@@ -62,7 +63,6 @@ const transition_matrix_without_pumpkin_seed = [
 
 
 
-var t0 = performance.now();
 
 var reg_vals = [];
 var reg_index = 0;
@@ -91,114 +91,39 @@ function calculate_all_populations(matrix, weeks, vec)
   return calculate_all_populations(matrix, weeks - 1, output_vector);
 }
 
-
-var t1 = performance.now()
-
 function comparePopulation(population, in_vec)
 {
   return Math.round((population/in_vec * 10000))/10000;
 }
 
-
-
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-}
-
-
-
-
 var population_array = calculate_all_populations(transition_matrix_with_pumpkin_seed, process.argv[2], initial_state_vector_with_pumpkinseed);
 new ObjectsToCsv(reg_vals).toDisk('./populations.csv');
-/*
-for (let i=0;i<100;i++){
-  fs.appendFile('herr.txt' , i,function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-  fs.appendFile('herr.txt' , ',',function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-  fs.appendFile('herr.txt' , reg_vals[i][1],function (err) {
-    if (err) throw err;
-  });
-  fs.appendFile('herr.txt' , ',',function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-  fs.appendFile('herr.txt' , reg_vals[i][2],function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-  fs.appendFile('herr.txt' , '\n',function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-}*/
+
 var population_array_original = calculate_all_populations(transition_matrix_without_pumpkin_seed, process.argv[2], initial_state_vector_without_pumpkinseed);
-/*
-for (let i=0;i<100;i++){
-  fs.appendFile('herr2.txt' , i,function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-  fs.appendFile('herr2.txt' , ',',function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-  fs.appendFile('herr2.txt' , reg_vals[i][1],function (err) {
-    if (err) throw err;
-  });
-  fs.appendFile('herr2.txt' , ',',function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-  fs.appendFile('herr2.txt' , reg_vals[i][2],function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-  fs.appendFile('herr2.txt' , '\n',function (err) {
-    if (err) throw err;
-  });
-  sleep(100);
-}*/
-
-
-var sum = 0;
-population_array.forEach( (item) =>
-  sum+=item
-)
 
 console.log(`Original Matrix`);
-console.log(`Phytoplankton Population: ${Math.floor(population_array_original[0]/1000000000)}B Net Change ${comparePopulation(population_array_original[0], initial_state_vector_without_pumpkinseed[0], 0)}`);
-console.log(`Ciliates      Population: ${Math.floor(population_array_original[1]/1000000000)}B Net Change ${comparePopulation(population_array_original[1], initial_state_vector_without_pumpkinseed[1], 1)}`);
-console.log(`Zooplankton   Population: ${Math.floor(population_array_original[2]/1000000000)}B Net Change ${comparePopulation(population_array_original[2], initial_state_vector_without_pumpkinseed[2], 2)}`);
-console.log(`Zebra Mussels Population: ${Math.floor(population_array_original[3]/1000000000)}B Net Change ${comparePopulation(population_array_original[3], initial_state_vector_without_pumpkinseed[3], 3)}`);
-console.log(`Junk          Population: ${Math.floor(population_array_original[4]/1000000000)}B Net Change N/A`);
-console.log(`Lake Herring  Population: ${Math.floor(population_array_original[5]/1000000000)}B Net Change ${comparePopulation(population_array_original[5], initial_state_vector_without_pumpkinseed[5], 5)}`);
-console.log(math.eig(transition_matrix_without_pumpkin_seed).lambda);
+console.log(`Phytoplankton Population: ${Math.floor(population_array_original[0]/1000000000)}B Scalar Change ${comparePopulation(population_array_original[0], initial_state_vector_without_pumpkinseed[0], 0)}`);
+console.log(`Ciliates      Population: ${Math.floor(population_array_original[1]/1000000000)}B Scalar Change ${comparePopulation(population_array_original[1], initial_state_vector_without_pumpkinseed[1], 1)}`);
+console.log(`Zooplankton   Population: ${Math.floor(population_array_original[2]/1000000000)}B Scalar Change ${comparePopulation(population_array_original[2], initial_state_vector_without_pumpkinseed[2], 2)}`);
+console.log(`Zebra Mussels Population: ${Math.floor(population_array_original[3]/1000000000)}B Scalar Change ${comparePopulation(population_array_original[3], initial_state_vector_without_pumpkinseed[3], 3)}`);
+console.log(`Junk          Population: ${Math.floor(population_array_original[4]/1000000000)}B Scalar Change N/A`);
+console.log(`Lake Herring  Population: ${Math.floor(population_array_original[5]/1000000000)}B Scalar Change ${comparePopulation(population_array_original[5], initial_state_vector_without_pumpkinseed[5], 5)}`);
 for(var i = 0; i < 5; i++)
 {
-  console.log('..........................');
+  console.log('.........................................................');
 }
 
 console.log(`Solution Matrix`);
-console.log(`Phytoplankton Population: ${Math.floor(population_array[0]/1000000000)}B Net Change ${comparePopulation(population_array[0], initial_state_vector_with_pumpkinseed[0], 0)}`);
-console.log(`Ciliates      Population: ${Math.floor(population_array[1]/1000000000)}B Net Change ${comparePopulation(population_array[1], initial_state_vector_with_pumpkinseed[1], 1)}`);
-console.log(`Zooplankton   Population: ${Math.floor(population_array[2]/1000000000)}B Net Change ${comparePopulation(population_array[2], initial_state_vector_with_pumpkinseed[2], 2)}`);
-console.log(`Zebra Mussels Population: ${Math.floor(population_array[3]/1000000000)}B Net Change ${comparePopulation(population_array[3], initial_state_vector_with_pumpkinseed[3], 3)}`);
-console.log(`Junk          Population: ${Math.floor(population_array[4]/1000000000)}B Net Change N/A`);
-console.log(`Pumpkinseed   Population: ${Math.floor(population_array[5]/1000000000)}B Net Change ${comparePopulation(population_array[5], initial_state_vector_with_pumpkinseed[5], 5)}`);
-console.log(`Lake Herring  Population: ${Math.floor(population_array[6]/1000000000)}B Net Change ${comparePopulation(population_array[6], initial_state_vector_with_pumpkinseed[6], 6)}`);
-console.log(`Total Populations: ${Math.floor(sum)}`);
-console.log(math.eig(transition_matrix_with_pumpkin_seed).lambda);
-console.log(`Equation: ${regression.polynomial(reg_vals).string}`);
-console.log(`R^2 value: ${regression.polynomial(reg_vals).r2}`);
+console.log(`Phytoplankton Population: ${Math.floor(population_array[0]/1000000000)}B Scalar Change ${comparePopulation(population_array[0], initial_state_vector_with_pumpkinseed[0], 0)}`);
+console.log(`Ciliates      Population: ${Math.floor(population_array[1]/1000000000)}B Scalar Change ${comparePopulation(population_array[1], initial_state_vector_with_pumpkinseed[1], 1)}`);
+console.log(`Zooplankton   Population: ${Math.floor(population_array[2]/1000000000)}B Scalar Change ${comparePopulation(population_array[2], initial_state_vector_with_pumpkinseed[2], 2)}`);
+console.log(`Zebra Mussels Population: ${Math.floor(population_array[3]/1000000000)}B Scalar Change ${comparePopulation(population_array[3], initial_state_vector_with_pumpkinseed[3], 3)}`);
+console.log(`Junk          Population: ${Math.floor(population_array[4]/1000000000)}B Scalar Change N/A`);
+console.log(`Pumpkinseed   Population: ${Math.floor(population_array[5]/1000000000)}B Scalar Change ${comparePopulation(population_array[5], initial_state_vector_with_pumpkinseed[5], 5)}`);
+console.log(`Lake Herring  Population: ${Math.floor(population_array[6]/1000000000)}B Scalar Change ${comparePopulation(population_array[6], initial_state_vector_with_pumpkinseed[6], 6)}`);
+console.log(`Weeks Elapsed: ${process.argv[2] * 5}`);
+var t1 = performance.now()
+//console.log(`Equation: ${regression.polynomial(reg_vals).string}`);
+//console.log(`R^2 value: ${regression.polynomial(reg_vals).r2}`);
 
-console.log(`Time: ${t1 - t0}s`);
+console.log(`Program runtime: ${(t1 - t0)/1000}s`);
